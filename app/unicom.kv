@@ -1,0 +1,257 @@
+MDScreen:
+    MDNavigationLayout:
+        # Main Content Area
+        MDScreenManager:
+            id: screen_manager
+
+            # Main content screen
+            MDScreen:
+                md_bg_color: self.theme_cls.secondaryContainerColor
+                name: "content_screen"
+                BoxLayout:
+                    orientation: 'vertical'
+                    size_hint: 1, 1  # Take up the full space of the screen
+
+                    MDTopAppBar:
+                        type: "small"
+
+                        MDTopAppBarLeadingButtonContainer:
+                            MDActionTopAppBarButton:
+                                icon: "menu"
+                                on_touch_down:
+                                    nav_drawer.set_state('open')
+
+    
+
+                        MDTopAppBarTrailingButtonContainer:
+                            MDActionTopAppBarButton:
+                                icon: "account-circle-outline"  # Optional icon, can add action here if needed
+                    Widget:
+                        size_hint_y:1
+
+
+            # Settings Screen
+            MDScreen:
+                name:"settings_screen"
+                md_bg_color: self.theme_cls.secondaryContainerColor
+                BoxLayout:
+                    orientation:'vertical'
+                    MDTopAppBar:
+                        type: "small"
+
+                        MDTopAppBarLeadingButtonContainer:
+
+                            MDActionTopAppBarButton:
+                                icon: "arrow-left"
+                                on_touch_down:
+                                    screen_manager.current = "content_screen"
+
+
+                        MDTopAppBarTitle:
+                            text: "Settings"
+                            pos_hint: {"center_x": .5}
+
+                        MDTopAppBarTrailingButtonContainer:
+
+                            MDActionTopAppBarButton:
+                                icon: "account-circle-outline"
+                    # Content for the settings screen (example toggle)
+                    MDLabel:
+                        text: "Settings"
+                        halign: "center"
+                        theme_text_color: "Primary"
+                        size_hint_y: None
+                        height: "50dp"
+
+                    MDSwitch:
+                        # giving position to the switch on screen
+                        text:'Enable Dark Mode'
+                        pos_hint: {'center_x': .5, 'center_y': .5}
+                        active: False  # Default state: Light mode
+                        on_active: app.toggle_dark_mode(self.active)  # Trigger the theme toggle when the switch is activated or deactivated
+                    Widget:
+                        size_hint_y:1
+            # OCR Screen
+            MDScreen:
+                name:"ocr_screen"
+                md_bg_color: self.theme_cls.secondaryContainerColor
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    MDTopAppBar:
+                        type: "small"
+
+                        MDTopAppBarLeadingButtonContainer:
+
+                            MDActionTopAppBarButton:
+                                icon: "arrow-left"
+                                on_touch_down:
+                                    screen_manager.current = "content_screen"
+
+
+                        MDTopAppBarTitle:
+                            text: "Scan An Image"
+                            pos_hint: {"center_x": .5}
+
+                        MDTopAppBarTrailingButtonContainer:
+
+                            MDActionTopAppBarButton:
+                                icon: "account-circle-outline"
+        
+
+                    # Camera Screen Layout
+                    CameraClick:
+                        id: cam
+                        Camera:
+                            id: camera  # This is the camera widget
+                            resolution: (640, 480)
+                            play: False  # Initially, camera is not playing
+                            size_hint: 1, 1  # Take up most of the screen height
+                            pos_hint: {"top": 1}  # Position the camera at the top of the screen
+
+                        MDFabButton:
+                            id: capture
+                            icon: "camera"
+                            style: "large"
+                            size_hint: None, None
+                            size: "56dp", "56dp"  # Set the size of the FAB button
+                            pos_hint: {"center_x": .5, "bottom": .2}  # Position the button near the top of the camera view
+                            on_press:
+                                camera.play = not camera.play 
+                                cam.capture()  # Toggle play/pause on button press
+                        
+
+                    
+            # Speech to Text Screen
+            MDScreen:
+                name: "speech_to_text_screen"
+                md_bg_color: self.theme_cls.secondaryContainerColor
+
+                BoxLayout:
+                    orientation: 'vertical'
+
+                    MDTopAppBar:
+                        type: "small"
+                        
+
+                        MDTopAppBarLeadingButtonContainer:
+                            MDActionTopAppBarButton:
+                                icon: "arrow-left"
+                                on_touch_down:
+                                    screen_manager.current = "content_screen"  # Go back to main content screen
+
+                        MDTopAppBarTitle:
+                            text: "Speech to Text"
+                            pos_hint: {"center_x": .5}
+
+                        MDTopAppBarTrailingButtonContainer:
+                            MDActionTopAppBarButton:
+                                icon: "account-circle-outline"  # Optional icon, can add action here if needed
+
+                    MDLabel:
+                        text: "Press the button and speak!"
+                        halign: "center"
+                        theme_text_color: "Secondary"
+                        size_hint_y: None
+                        height: "50dp"
+                        pos_hint: {"center_x": 0.5, "center_y": 0.6}  # Label for instructions
+
+                    Widget:
+                        size_hint_y: 1
+
+
+                # Text Input Screen
+            MDScreen:
+                name: "text_input_screen"
+                md_bg_color: self.theme_cls.secondaryContainerColor
+
+                BoxLayout:
+                    orientation:'vertical'
+
+                    MDTopAppBar:
+                        type: "small"
+
+                        MDTopAppBarLeadingButtonContainer:
+                            MDActionTopAppBarButton:
+                                icon: "arrow-left"
+                                on_touch_down:
+                                    screen_manager.current = "content_screen"  # Go back to main content screen
+
+                        MDTopAppBarTitle:
+                            text: "Enter Text"
+                            pos_hint: {"center_x": .5}
+
+                        MDTopAppBarTrailingButtonContainer:
+                            MDActionTopAppBarButton:
+                                icon: "account-circle-outline"  # Optional icon, can add action here if needed
+
+                    MDTextField:
+                        hint_text: "Type something here..."
+                        size_hint: None, None
+                        size: "280dp", "48dp"
+                        pos_hint: {"center_x": .5, "center_y": .4}  # Centered input field
+                        multiline: False  # Disable multiline for simple text input
+
+                    Widget:
+                        size_hint_y:1
+
+        # MDNavigationDrawer with cream-colored background
+        MDNavigationDrawer:
+            id: nav_drawer
+            radius: 0, dp(16), dp(16), 0
+
+            MDNavigationDrawerMenu:
+
+                # Menu Label
+                MDNavigationDrawerLabel:
+                    text: "Menu"
+
+                # Divider (optional, you can add multiple dividers if needed)
+                MDNavigationDrawerDivider:
+
+                # Settings item
+                MDNavigationDrawerItem:
+                    id: 'item1'
+
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: "cog-outline"
+                    MDNavigationDrawerItemText:
+                        text: "Settings"
+                        on_touch_down:
+                            nav_drawer.set_state('close')  # Close the drawer after item selection
+                            screen_manager.current = "settings_screen"  # Switch to the settings screen
+
+                # Scan Text item
+                MDNavigationDrawerItem:
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: "camera"
+                    MDNavigationDrawerItemText:
+                        text: "Scan Text"
+                        on_touch_down:
+                            nav_drawer.set_state('close')  # Close the drawer after item selection
+                            screen_manager.current = "ocr_screen"
+                
+                # Enter Text item
+                MDNavigationDrawerItem:
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: "translate"
+                    MDNavigationDrawerItemText:
+                        text: "Enter Text"
+                        on_touch_down:
+                            nav_drawer.set_state('close')  # Close the drawer after item selection
+                            screen_manager.current = "text_input_screen"
+
+                # Enter Speech
+                MDNavigationDrawerItem:
+                    MDNavigationDrawerItemLeadingIcon:
+                        icon: "voicemail"
+                    MDNavigationDrawerItemText:
+                        text: "Speech To Text"
+                        on_touch_down:
+                            nav_drawer.set_state('close')  # Close the drawer after item selection
+                            screen_manager.current = "speech_to_text_screen"
+
+
+
+
+                        
