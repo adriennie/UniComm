@@ -1,82 +1,100 @@
-# This KV file defines the UI for UniComApp
+MDNavigationLayout:
+    ScreenManager:
+        id: screen_manager
 
-Screen:
-    MDNavigationLayout:
+        Screen:
+            name: 'content_screen'
 
-        ScreenManager:
-            id: screen_manager
+            BoxLayout:
+                orientation: 'vertical'
 
-            Screen:
-                name: 'content_screen'
+                MDTopAppBar:
+                    title: 'UniCom'
+                    elevation: 10
+                    left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
 
-                BoxLayout:
+                MDBoxLayout:
                     orientation: 'vertical'
+                    padding: dp(10)
+                    spacing: dp(10)
 
-                    MDTopAppBar:
-                        title: 'UniCom'
-                        elevation: 10
-                        left_action_items: [['menu', lambda x: nav_drawer.set_state('toggle')]]
+                    MDLabel:
+                        text: "Translator"
+                        halign: "center"
+                        theme_text_color: "Primary"
+                        font_style: "H5"
 
                     MDBoxLayout:
-                        orientation: 'vertical'
-                        padding: dp(10)
+                        orientation: "horizontal"
                         spacing: dp(10)
 
-                        MDLabel:
-                            text: "Translator"
-                            halign: "center"
-                            theme_text_color: "Primary"
-                            font_style: "H5"
-
-                        MDBoxLayout:
-                            orientation: "horizontal"
-                            spacing: dp(10)
-
-                            MDTextField:
-                                id: source_lang_spinner
-                                hint_text: "Source Language"
-                                readonly: True
-                                on_focus: if self.focus: app.menu_source.open()
-
-                            MDTextField:
-                                id: target_lang_spinner
-                                hint_text: "Target Language"
-                                readonly: True
-                                on_focus: if self.focus: app.menu_target.open()
+                        MDTextField:
+                            id: source_lang_spinner
+                            hint_text: "Source Language"
+                            readonly: True
+                            on_focus: if self.focus: app.menu_source.open()
 
                         MDTextField:
-                            id: input_text
-                            hint_text: "Enter text to translate"
-                            multiline: True
-                            size_hint_y: None
-                            height: dp(100)
+                            id: target_lang_spinner
+                            hint_text: "Target Language"
+                            readonly: True
+                            on_focus: if self.focus: app.menu_target.open()
+
+                    MDTextField:
+                        id: input_text
+                        hint_text: "Enter text to translate"
+                        multiline: True
+                        size_hint_y: None
+                        height: dp(100)
+
+                    MDProgressBar:
+                        id: loading_bar
+                        type: "indeterminate"
+                        color: app.theme_cls.primary_color
+                        size_hint_y: None
+                        height: dp(4)
+
+                    MDBoxLayout:
+                        orientation: 'horizontal'
+                        spacing: dp(10)
+                        size_hint_y: None
+                        height: dp(50)
 
                         MDRaisedButton:
                             text: "Translate"
                             on_release: app.translate_text()
 
-                        MDTextField:
-                            id: output_text
-                            hint_text: "Translation output"
-                            multiline: True
-                            readonly: True
-                            size_hint_y: None
-                            height: dp(100)
+                        MDRaisedButton:
+                            text: "Speak Output"
+                            on_release: app.speak_output_text()
 
-        MDNavigationDrawer:
-            id: nav_drawer
+                    MDTextField:
+                        id: output_text
+                        hint_text: "Translation output"
+                        multiline: True
+                        readonly: True
+                        size_hint_y: None
+                        height: dp(100)
 
-            BoxLayout:
-                orientation: 'vertical'
+    MDNavigationDrawer:
+        id: nav_drawer
 
-                MDLabel:
-                    text: 'Menu'
-                    font_style: 'Subtitle1'
+        BoxLayout:
+            orientation: 'vertical'
+            padding: dp(10)
+
+            MDLabel:
+                text: 'Menu'
+                font_style: 'Subtitle1'
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            ScrollView:
+                MDBoxLayout:
+                    orientation: 'vertical'
                     size_hint_y: None
-                    height: self.texture_size[1]
-                    padding: dp(10), dp(10)
+                    height: self.minimum_height
 
-                ScrollView:
                     MDList:
                         OneLineListItem:
                             text: 'Home'
@@ -84,8 +102,21 @@ Screen:
                                 screen_manager.current = 'content_screen'
                                 nav_drawer.set_state('close')
 
-                        OneLineListItem:
+                    BoxLayout:
+                        orientation: 'horizontal'
+                        size_hint_y: None
+                        height: dp(56)
+                        padding: [dp(10), 0, dp(30), 0]  # <--- INCREASED RIGHT padding
+
+                        MDLabel:
                             text: 'Dark Mode'
-                            on_release:
-                                app.toggle_dark_mode(not app.theme_cls.theme_style == "Dark")
-                                nav_drawer.set_state('close')
+                            halign: 'left'
+                            valign: 'center'
+                            size_hint_x: 0.7
+
+                        MDSwitch:
+                            id: dark_mode_switch
+                            size_hint_x: None
+                            width: dp(48)
+                            pos_hint: {"center_y": 0.5}
+                            on_active: app.toggle_dark_mode(self, self.active)
