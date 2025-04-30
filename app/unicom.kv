@@ -68,6 +68,10 @@ MDNavigationLayout:
                             text: "Speak Output"
                             on_release: app.speak_output_text()
 
+                        MDRaisedButton:
+                            text: "Speak Input"
+                            on_release: app.speech_to_text()  # Calls speech-to-text
+
                     MDTextField:
                         id: output_text
                         hint_text: "Translation output"
@@ -106,7 +110,7 @@ MDNavigationLayout:
                         orientation: 'horizontal'
                         size_hint_y: None
                         height: dp(56)
-                        padding: [dp(10), 0, dp(30), 0]  # <--- INCREASED RIGHT padding
+                        padding: [dp(10), 0, dp(30), 0]  # Increased padding
 
                         MDLabel:
                             text: 'Dark Mode'
